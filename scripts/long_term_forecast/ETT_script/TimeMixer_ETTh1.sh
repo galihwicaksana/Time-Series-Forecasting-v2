@@ -13,113 +13,42 @@ train_epochs=10
 patience=10
 batch_size=16
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path  ./dataset/ETT-small/\
-  --data_path ETTh1.csv \
-  --model_id ETTh1_$seq_len'_'96 \
-  --model $model_name \
-  --data ETTh1 \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 96 \
-  --e_layers $e_layers \
-  --enc_in 7 \
-  --c_out 7 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --batch_size 128 \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+# Log file untuk hasil training
+log_file="long_term_forecast_results.log"
+echo "Training Results" > $log_file
 
+for pred_len in 96 192 336 720; do
+    model_id="ETTh1_${seq_len}_${pred_len}"
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/ETT-small/ \
-  --data_path ETTh1.csv \
-  --model_id ETTh1_$seq_len'_'192 \
-  --model $model_name \
-  --data ETTh1 \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 192 \
-  --e_layers $e_layers \
-  --enc_in 7 \
-  --c_out 7 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --batch_size 128 \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+    echo "Running training for prediction length: $pred_len" | tee -a $log_file
 
+    python -u run.py \
+      --task_name long_term_forecast \
+      --is_training 1 \
+      --root_path ./dataset/ETT-small/ \
+      --data_path ETTh1.csv \
+      --model_id $model_id \
+      --model $model_name \
+      --data ETTh1 \
+      --features M \
+      --seq_len $seq_len \
+      --label_len 0 \
+      --pred_len $pred_len \
+      --e_layers $e_layers \
+      --enc_in 7 \
+      --c_out 7 \
+      --des 'Exp' \
+      --itr 1 \
+      --d_model $d_model \
+      --d_ff $d_ff \
+      --learning_rate $learning_rate \
+      --train_epochs $train_epochs \
+      --patience $patience \
+      --batch_size 128 \
+      --down_sampling_layers $down_sampling_layers \
+      --down_sampling_method avg \
+      --down_sampling_window $down_sampling_window | tee -a $log_file
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/ETT-small/ \
-  --data_path ETTh1.csv \
-  --model_id ETTh1_$seq_len'_'336 \
-  --model $model_name \
-  --data ETTh1 \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 336 \
-  --e_layers $e_layers \
-  --enc_in 7 \
-  --c_out 7 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --batch_size 128 \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+    echo "Completed training for pred_len=$pred_len" | tee -a $log_file
 
-
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/ETT-small/ \
-  --data_path ETTh1.csv \
-  --model_id ETTh1_$seq_len'_'720 \
-  --model $model_name \
-  --data ETTh1 \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 720 \
-  --e_layers $e_layers \
-  --enc_in 7 \
-  --c_out 7 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --batch_size 128 \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+done  

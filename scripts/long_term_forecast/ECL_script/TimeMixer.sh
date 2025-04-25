@@ -1,9 +1,20 @@
-#export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=0
 
 model_name=TimeMixer
-
+root_path=./dataset/electricity/
+data_path=electricity.csv
+data=custom
+features=M
 seq_len=96
+label_len=0
 e_layers=3
+d_layers=1
+factor=3
+enc_in=321
+dec_in=321
+c_out=321
+des='Exp'
+itr=1
 down_sampling_layers=3
 down_sampling_window=2
 learning_rate=0.01
@@ -12,123 +23,46 @@ d_ff=32
 batch_size=32
 train_epochs=20
 patience=10
+down_sampling_method=avg
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/electricity/ \
-  --data_path electricity.csv \
-  --model_id ECL_$seq_len'_'96 \
-  --model $model_name \
-  --data custom \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 96 \
-  --e_layers $e_layers \
-  --d_layers 1 \
-  --factor 3 \
-  --enc_in 321 \
-  --dec_in 321 \
-  --c_out 321 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --batch_size $batch_size \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+log_file="long_term_forecast_timeMixer_ECL_results.log"
+echo "Training Results" > $log_file
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/electricity/ \
-  --data_path electricity.csv \
-  --model_id ECL_$seq_len'_'192 \
-  --model $model_name \
-  --data custom \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 192 \
-  --e_layers $e_layers \
-  --d_layers 1 \
-  --factor 3 \
-  --enc_in 321 \
-  --dec_in 321 \
-  --c_out 321 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --batch_size $batch_size \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+for pred_len in 96 192 336 720; do
+    model_id="ECL_${seq_len}_${pred_len}"
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/electricity/ \
-  --data_path electricity.csv \
-  --model_id ECL_$seq_len'_'336 \
-  --model $model_name \
-  --data custom \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 336 \
-  --e_layers $e_layers \
-  --d_layers 1 \
-  --factor 3 \
-  --enc_in 321 \
-  --dec_in 321 \
-  --c_out 321 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --batch_size $batch_size \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+    echo "Running training for prediction length: $pred_len" | tee -a $log_file
 
-python -u run.py \
-  --task_name long_term_forecast \
-  --is_training 1 \
-  --root_path ./dataset/electricity/ \
-  --data_path electricity.csv \
-  --model_id ECL_$seq_len'_'720 \
-  --model $model_name \
-  --data custom \
-  --features M \
-  --seq_len $seq_len \
-  --label_len 0 \
-  --pred_len 720 \
-  --e_layers $e_layers \
-  --d_layers 1 \
-  --factor 3 \
-  --enc_in 321 \
-  --dec_in 321 \
-  --c_out 321 \
-  --des 'Exp' \
-  --itr 1 \
-  --d_model $d_model \
-  --d_ff $d_ff \
-  --batch_size $batch_size \
-  --learning_rate $learning_rate \
-  --train_epochs $train_epochs \
-  --patience $patience \
-  --down_sampling_layers $down_sampling_layers \
-  --down_sampling_method avg \
-  --down_sampling_window $down_sampling_window
+    python -u run.py \
+      --task_name long_term_forecast \
+      --is_training 1 \
+      --root_path $root_path \
+      --data_path $data_path \
+      --model_id $model_id \
+      --model $model_name \
+      --data $data \
+      --features $features \
+      --seq_len $seq_len \
+      --label_len $label_len \
+      --pred_len $pred_len \
+      --e_layers $e_layers \
+      --d_layers $d_layers \
+      --factor $factor \
+      --enc_in $enc_in \
+      --dec_in $dec_in \
+      --c_out $c_out \
+      --des $des \
+      --itr $itr \
+      --d_model $d_model \
+      --d_ff $d_ff \
+      --batch_size $batch_size \
+      --learning_rate $learning_rate \
+      --train_epochs $train_epochs \
+      --patience $patience \
+      --down_sampling_layers $down_sampling_layers \
+      --down_sampling_method $down_sampling_method \
+      --down_sampling_window $down_sampling_window | tee -a $log_file
+
+      echo "Completed training for pred_len=$pred_len" | tee -a $log_file
+
+done
