@@ -514,3 +514,4 @@ class Model(nn.Module):
             return dec_out  # [B, N]
         else:
             raise ValueError('Other tasks implemented yet')
+        
