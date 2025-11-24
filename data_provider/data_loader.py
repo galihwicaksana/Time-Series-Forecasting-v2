@@ -239,9 +239,6 @@ class Dataset_Custom(Dataset):
         df_raw = pd.read_csv(os.path.join(self.root_path,
                                           self.data_path))
 
-        '''
-        df_raw.columns: ['date', ...(other features), target feature]
-        '''
         cols = list(df_raw.columns)
         cols.remove(self.target)
         cols.remove('date')
