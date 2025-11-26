@@ -1,0 +1,7 @@
+Master Training Log
+Started: 2025-11-26 16:49:54
+========================================
+
+[2025-11-26 16:49:54] Total Experiments: 96 training runs (6 scripts × 16 combinations)
+[2025-11-26 16:49:54] Estimated Total Time: 10-14 hours
+[2025-11-26 16:49:54] Starting: TimeMixer (ETTh1)
